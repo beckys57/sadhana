@@ -32,6 +32,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,13 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    #third party apps
+    'rest_framework',
+    'corsheaders',
+    
+    
     'sadhana_forest',
     'people',
     'trees',
     
     
-    #third party apps
-    # 'rest_framework',
     #local apps
     'api',
 ]
@@ -53,6 +57,7 @@ INSTALLED_APPS = [
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -134,12 +139,27 @@ import os
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATICFILES_DIRS = (
   os.path.join(SITE_ROOT, 'static/'),
+  os.path.join(BASE_DIR, 'assets/build/static/'),
 )
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-	os.path.join(BASE_DIR, 'assets/build/static/'),
-)
-
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets/')
+
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        'rest_framework.permissions.IsAdminUser',
+    ],
+    'PAGE_SIZE': 10,
+}
+
+#CORS_ORIGIN_ALLOW_ALL = True
+
+#CORS_ORIGIN_WHITELIST = (
+#    '<YOUR_DOMAIN>[:8081]',
+#)

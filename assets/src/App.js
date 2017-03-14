@@ -6,11 +6,13 @@ import $ from 'jquery';
 
 var BooksList = React.createClass({
     loadBooksFromServer: function(){
+        console.log(' In ', this.props.url)
         $.ajax({
-            url: this.props.url,
+            url: 'http://sadhana-forest-beckys57.c9users.io/api/',// this.props.url,
             datatype: 'json',
             cache: false,
             success: function(data) {
+                console.log('Got ')
                 this.setState({data: data});
             }.bind(this)
         })
@@ -27,9 +29,9 @@ var BooksList = React.createClass({
     }, 
     render: function() {
         if (this.state.data) {
-            console.log('DATA!')
+            console.log('DATA!', this.state)
             var bookNodes = this.state.data.map(function(book, index){
-                return <li key={index}> {book.title} </li>
+                return <li key={index}> .{book.title} </li>
             })
         }
         return (
@@ -54,7 +56,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <BooksList url='/api/' pollInterval={10000} />
+        <BooksList url='/api/' pollInterval={100000} />
       </div>
     );
   }
