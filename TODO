@@ -1,0 +1,18 @@
+Create (progressive) React app on Heroku
+
+React router is for having different urls on one app without having to reload the app.
+Web API built into browser to allow to do this (updates address bar)
+
+Progressive allows us to cache on client's local storage. Can also add to homescreen to open app in the browser (all already downloaded)
+
+Some projects on Github for React progressive apps
+
+1 Creat a normal React app
+2 Make it offline
+
+
+TODO
+Make templatetag to get latest bundle from assets/build/static/js it has dynamic filename. Use this in index.html
+Setup react router urls for react app
+
+When developing react app, run npm start on one terminal to run the dev version of react app, and run django runserver from a different terminal to make the api available

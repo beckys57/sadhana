@@ -1,0 +1,17 @@
+<table class="table striped white hoverable">
+	<tbody>
+		
+	    <tr>
+	        <td class="padding-tiny">Gender</td>
+	        <td class="padding-tiny">{%if person.gender%}F{%else%}M{%endif%}</td>
+	        <td class="padding-tiny">Village</td>
+	        <td class="padding-tiny">{{person.village}}</td>
+	        <td class="padding-tiny">Phone</td>
+	        <td class="padding-tiny">{{person.phone}}</td>
+	    </tr>
+	    <tr>
+	        <td colspan=4>Training date: {{person.training_date|date:'d.m.y'}}</td>
+	        <td colspan=4>{{trees}} trees</td>
+	    </tr>
+	</tbody>
+</table>

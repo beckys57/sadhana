@@ -1,0 +1,21 @@
+<table id='people_table' class="table striped white bordered border">
+    <tbody>
+        
+    <tr>
+        <th><h5>{%if not sorting == 'last_name'%}<a href="{% url 'people:master_list' %}?sort=last_name">Last Name</a>{%else%}Last Name{%endif%}</th>
+        <th><h5>{%if not sorting == 'first_name'%}<a href="{% url 'people:master_list' %}?sort=first_name">First Name</a>{%else%}First Name{%endif%}</th>
+        
+        <th><h5>{%if not sorting == 'village'%}<a href="{% url 'people:master_list' %}?sort=village">Village</a>{%else%}Village{%endif%}</th>
+        <!--td>Phone No.</td><td>Tree Planting Training</td><td>Tree(s) Planted</td><td>Water Conservation Training</td><td>Resource Mapping</td><td>NRM Planning</td><td>Demos/Tour</td><td>Other Outreach/Trainings</td><td>Comments</td-->
+    </tr>
+    {% for person in people %}
+    <tr>
+        
+        <td><a class='last-name' data-id='{{person.id}}'>{{ person.last_name }}</a></td>
+        <td>{{ person.first_name }}</td>
+        <td>{{person.village}}</td>
+    </tr>
+    {% endfor %} 
+    
+    </tbody>
+</table>

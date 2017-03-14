@@ -1,0 +1,311 @@
+{% extends 'people/base.html' %}
+
+{% block body %}
+<div class="container section">
+	
+	<header class="container" style="padding-top:22px">
+		<h2><b><i class="fa fa-users"></i> People</b></h2>
+	</header>
+	
+	<div class="row-padding margin-bottom" style="margin:0 -16px">
+		<div class="quarter">
+			<div class="container red padding-16" style="height:8.5em;">
+				<div class="left"><i class="fa fa-search xxxlarge"></i></div>
+				<div class="right">
+					<h3>Search</h3>
+				</div>
+				<div class="clear"></div>
+				<input id='search' type='text' placeholder='Search by name'>
+			</div>
+		</div>
+		<div class="quarter">
+			<div class="container teal padding-16" style="height:8.5em;">
+				<div class="left"><i class="fa fa-circle-o-notch xxxlarge"></i></div>
+				<div class="right">
+					<h3>Show</h3>
+				</div>
+				<div class="clear"></div>
+				<a class='ajax-link' data-view-url="{% url 'people:filter_list' %}?filter=1">People trained with no trees</a>
+				
+			</div>
+		</div> 
+		<div class="quarter">
+			<div class="container green padding-16" style="height:8.5em;">
+				<div class="left"><i class="fa fa-leaf xxxlarge"></i></div>
+				<div class="right">
+					<h3>Plan</h3>
+				</div>
+				<div class="clear"></div>
+				<span class='tabber' data-code='planting'><b><i class="fa fa-leaf"></i> Organize a planting</b></span>
+				
+			</div>
+		</div> 
+	</div>
+</div>
+
+<div class="container section">
+	<div class="row-padding" style="margin:0 -16px">
+		<div class='third'>
+			<div id='people'>
+				{{people_table}}   
+			</div>
+		</div>
+		
+		<div class='twothird'>
+			
+			<div class="container">
+			    <div class="card-4 white" style='padding: 1em;'>
+    				<div class="row">
+    					<div class="third" style="padding:0 8px;">
+    						<h5 class="bottombar border-green"><span class='tabber' data-code='planting'><b><i class="fa fa-leaf"></i> Organize a planting</b></span></h5>
+    					</div>
+    					<div class="third" style="padding:0 8px;">
+    						<h5 class="bottombar border-red"><span class='tabber' data-code='person_details'><a class='person-url' href="{% url 'people:view_person' %}?person_id="><b><i class="fa fa-address-book"></i> Details</b></a></span></h5>
+    					</div>
+    					<div class="third" style="padding:0 8px;">
+    						<h5 class="bottombar border-orange"><span class='tabber' data-code='family_tree'><a class='person-url' href="{% url 'people:family_tree' %}?person_id="><b><i class="fa fa-sitemap"></i> Family</b></a></span></h5>
+    					</div>
+    				</div>
+		
+			
+					
+					<div id='planting' class='tabber-box'>
+						
+						<ul id='planting_list'>
+							{% autoescape off %}
+							{{planting_list}}
+							{% endautoescape %}
+							<a href="{% url 'trees:enter_data' 1 %}">Enter data from this planting</a>
+						</ul>
+					</div>
+					<div id='person_details' class='tabber-box'>
+						Select a person to view their details
+					</div>
+					<div id='family_tree' class='tabber-box'>
+						Select a person to view their family
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			$('.ajax-link').on('click', function(){
+				var url = $(this).data('view-url')
+				$.ajax({
+					type: 'GET',
+					url: url,
+					success: function(returned){
+						$('#people').html(returned['html'])
+					},
+					error: function(){
+						console.log('failure');
+					}
+					
+				})
+			})
+			
+			$("#search").on('keyup', function(){
+				var query = $(this).val();
+				var data = {'query':query}
+				var url = "{% url 'people:filter_list' %}?query="+query;
+				
+				$.ajax({
+					type: 'GET',
+					url: url,
+					success: function(returned){
+						$('#people').html(returned['html'])
+					},
+					error: function(){
+						console.log('failure');
+					}
+					
+				})
+			});
+			
+			function change_url(person_id, url_item){
+				var url = url_item.attr('href');
+				var split_url = url.split('?person_id=');
+				return split_url[0]+'?person_id='+person_id;
+			}
+			
+			
+			$(document).on('click', '#people_table td a.last-name', function(){
+				console.log('Click', $(this))
+				if($('.active-tabber').data('code')=='planting'){
+					var person_id = $(this).data('id');
+					var url = "{% url 'people:make_list_item' %}"
+					$.ajax({
+						type: 'GET',
+						url: url+'?person_id='+person_id,
+						success: function(returned){
+							$('#planting_list').prepend(returned['html'])
+						},
+						error: function(){
+							console.log('failure');
+						}
+						
+					})
+				}
+				
+				else{
+					var person_id = $(this).data('id');
+					var urls = $('.person-url');
+					console.log('Urls', urls)
+					for(var x=0;x<urls.length;x++){
+						var url_item = $(urls[x]);
+						var new_url = change_url(person_id, url_item);
+						url_item.attr('href', new_url);
+					}
+					var active_person_url = $('.active-tabber > .person-url')
+					if(active_person_url.length){
+						active_person_url.click();
+					}
+					else{
+						urls.first().click();
+					}
+					
+				}
+			});
+			
+			$('.person-url').on('click', function(e){
+				e.preventDefault();
+				var $tabber_box = $('#'+$(this).closest('.tabber').data('code'));
+				$.ajax({
+					type: 'GET',
+					url: $(this).attr('href'),
+					success: function(returned){
+						$tabber_box.html(returned['html'])
+					},
+					error: function(){
+						console.log('failure');
+					}
+				})
+			})
+			
+			$('#planting_list').on('click', 'li a', function(){
+				console.log('Remove', $(this).closest('li').html())
+				var url = $(this).data('view-url');
+				var $list_item = $(this).closest('li');
+				
+				$.ajax({
+					'url': url,
+					'success': function(){
+						$list_item.remove();                        
+					}
+				});
+				
+			})
+			
+                /*$('#save_planting').on('click', function(){
+                    
+                    var people = $('#planting_list li');
+                    var id_list = []
+                    people.each(function(i, person){
+                        id_list[i] = $(person).data('id');
+                    })
+                    id_string = id_list.join(',')
+                    console.log('ID string', id_string)
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: {'id_list':id_string},
+                        success: function(){
+                            $('#planting_list').html('<h3>List saved</h3>')
+                        }
+                    })
+                })*/
+                
+                $('.tabber').on('click', function(){
+                	var code_id = '#'+$(this).data('code');
+                	$('.tabber').removeClass('active-tabber');
+                	$('.tabber-box').hide();
+                	
+                	$(this).addClass('active-tabber');
+                	$(code_id).show();
+                })
+                
+                
+                
+            });
+		
+		
+	</script>
+	
+	
+	<script type="text/javascript">
+        // Family tree scripts
+        $(document).ready(function(){
+        	$(document).on('keyup', "#search_relatives", function(){
+        		console.log('Search');
+        		var query = $(this).val();
+        		var data = {'query':query, 'mini':1}
+        		var url = "{% url 'people:filter_list' %}"
+        		
+        		$.ajax({
+        			type: 'GET',
+        			url: url,
+        			data: data,
+        			success: function(returned){
+        				console.log('success', returned);
+        				$('#results_relatives').html(returned['html'])
+        			},
+        			error: function(){
+        				console.log('failure');
+        			}
+        			
+        		})
+        	});
+        	
+        	$(document).on('click', '.autocomplete-item.relatives', function(){
+        		
+        		var $relative_box = $('#search_relatives');
+        		var url = $relative_box.data('view-url');
+        		$relative_box.data('id', $(this).data('id')).val($(this).text());
+        		$(this).closest('.dropdown').html('');
+        		console.log('url', url)
+        		
+        	});
+        	
+        	$(document).on('click', '#make_relationship', function(){
+        		var $relative_box = $('#search_relatives');
+        		
+        		
+        		var data = {
+        			'relative_id':  $relative_box.data('id'),
+        			'relationship': $('#relationship_options').val(),
+        		}
+        		console.log('Da', data)
+        		if(data['relative_id']){
+        			var url = $relative_box.data('view-url');
+        			console.log('Ading relat', url, data)
+        			$.ajax({
+        				type: 'GET',
+        				url: url,
+        				data: data,
+        				success: function(){
+        					console.log('successs');
+        					$('.tabber > .person-url').trigger('click');
+        					
+        				},
+        				error: function(){
+        					console.log('failure');
+        				}
+        				
+        			})
+        		}
+        		
+        	})
+        	
+        	$(document).on('click', '.dropdown', function(){
+        		$(this).hide();
+        	})
+        });
+        
+    </script>
+    
+    
+    {% endblock body %}

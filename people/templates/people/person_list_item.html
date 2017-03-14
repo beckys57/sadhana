@@ -1,0 +1,4 @@
+<li data-id='{{person.id}}'>
+    {{person.last_name}}, {{person.first_name}}
+    <a style='font-size:0.6em;' data-view-url="{% url 'people:remove_tree_planting' person.id %}">Remove</a>
+</li>

@@ -1,0 +1,7 @@
+Make remove button work on Organize planting
+
+Niceify urls
+
+Move scripts to files from master_list.html
+
+Person search when match not found - should return message, not whole list

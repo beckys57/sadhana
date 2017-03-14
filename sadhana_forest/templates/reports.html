@@ -1,0 +1,67 @@
+{% extends 'people/base.html' %}
+
+{% block extra_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+{% endblock extra_scripts %}
+
+{% block body %}
+<div class="container section">
+	
+	<header class="container" style="padding-top:22px">
+		<h2><b><i class="fa fa-bar-chart"></i> Reports</b></h2>
+	</header>
+</div>
+
+<div class="container section">
+	<div class="half white" style="padding: 0 16px">
+		
+		<h5>Causes of tree death</h5>
+		
+		<div class="row-padding margin-bottom" style="margin:0 -16px">
+			
+			<canvas id="myChart"></canvas>
+			
+		</div>
+		
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	
+	var ctx = document.getElementById("myChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'doughnut',
+		data: {
+			labels: {{labels|safe}},
+			datasets: [{
+				backgroundColor: [
+				
+				"#2ecc71",
+				"#3498db",
+				"#95a5a6",
+				"#34495e",
+				"#9b59b6",
+				"#f1c40f",
+				"#e74c3c",
+				
+				"#2196F3",
+				"#ff9800",
+				"#f44336",
+				"#009688",
+				"#f1c40f",
+				"#fdf5e6",
+				"#9c27b0",
+				"#673ab7",
+				"#009688",
+				"#f1c40f",
+				"#fdf5e6",
+				"#673ab7",
+				],
+				data: {{stats|safe}}
+			}]
+		}
+	});
+</script>
+
+{% endblock body %}

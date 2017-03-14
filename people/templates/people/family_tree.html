@@ -1,0 +1,47 @@
+{% load static %}
+
+<input id='search_relatives' type='text' placeholder='search by name' data-view-url="{% url 'people:define_relationship' person.id %}">
+<div id='results_relatives' class='dropdown' style='width:16em;'></div>
+is {{person.first_name}}'s...
+<select id="relationship_options">
+  <option value='1'>...parent</option>
+  <option value='2'>...sibling</option>
+  <option value='3'>...spouse</option>
+  <option value='4'>...child</option>
+</select>
+<a id='make_relationship'>Add</a>
+<br><BR>
+  
+  <div id='family_tree'>
+      
+{% if parents %}
+  {% for parent in parents %}
+    <div class='box-sm'>{{parent}}</div>
+  {% endfor %}
+{% endif %}
+
+<br>
+
+
+<div class='box-sm current'>
+  {{person}}
+  {% if spouses %} <3 {% for spouse in spouses%}{{spouse}}{%endfor%}{% endif %}
+  </div>
+{% if siblings %}
+  {% for sibling in siblings %}
+   
+     <div class='box-sm'>{{sibling}}</div>
+    
+  {% endfor %}
+
+{% endif %}
+<br>
+
+{% if children %}
+  {% for child in children %}
+  <div class='box-sm'>{{child.from_person}}</div>
+  {% endfor %}
+{% endif %}
+
+  </div>
+    
