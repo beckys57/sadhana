@@ -1,46 +1,9 @@
 import React, { Component } from 'react';
 
-
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery'; 
 
-
-var VisitForm = React.createClass({
-    getFormsetFromServer: function(){
-        console.log(' In ')
-        $.ajax({
-            url: 'http://sadhana-beckys57.c9users.io/api/',
-            datatype: 'json',
-            cache: false,
-            success: function(data) {
-                console.log('Got form')
-                this.setState({data: data});
-            }.bind(this)
-        })
-    },
-
-    getInitialState: function() {
-        return {data: []};
-    },
-
-    componentDidMount: function() {
-        this.getFormsetFromServer();
-        setInterval(this.getFormsetFromServer, 
-                    this.props.pollInterval)
-    }, 
-    render: function() {
-        if (this.state.data && this.state.data.formset_html) {
-            var formsetHtml = this.state.data.formset_html
-            console.log('DATA!',)
-        }
-        return (
-            <div>
-                
-            </div>
-        )
-    }
-})
 
 var BooksList = React.createClass({
     loadBooksFromServer: function(){
@@ -75,7 +38,6 @@ var BooksList = React.createClass({
         }
         return (
             <div>
-                <h1>Hello React!</h1>
                 <ul>
                     {bookNodes}
                 </ul>
@@ -99,8 +61,6 @@ class App extends Component {
             BookList
         </p>
         <BooksList url='http://sadhana-beckys57.c9users.io/api/' pollInterval={100000} />
-            <p>VisitFormset</p>
-        <VisitForm pollInterval={100000} />
       </div>
     );
   }
