@@ -1,14 +1,52 @@
 import React, { Component } from 'react';
+
+
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery'; 
 
 
+var VisitForm = React.createClass({
+    getFormsetFromServer: function(){
+        console.log(' In ')
+        $.ajax({
+            url: 'http://sadhana-beckys57.c9users.io/api/',
+            datatype: 'json',
+            cache: false,
+            success: function(data) {
+                console.log('Got form')
+                this.setState({data: data});
+            }.bind(this)
+        })
+    },
+
+    getInitialState: function() {
+        return {data: []};
+    },
+
+    componentDidMount: function() {
+        this.getFormsetFromServer();
+        setInterval(this.getFormsetFromServer, 
+                    this.props.pollInterval)
+    }, 
+    render: function() {
+        if (this.state.data && this.state.data.formset_html) {
+            var formsetHtml = this.state.data.formset_html
+            console.log('DATA!',)
+        }
+        return (
+            <div>
+                
+            </div>
+        )
+    }
+})
+
 var BooksList = React.createClass({
     loadBooksFromServer: function(){
         console.log(' In ', this.props.url)
         $.ajax({
-            url: 'http://sadhana-forest-beckys57.c9users.io/api/',// this.props.url,
+            url: this.props.url,
             datatype: 'json',
             cache: false,
             success: function(data) {
@@ -28,9 +66,10 @@ var BooksList = React.createClass({
                     this.props.pollInterval)
     }, 
     render: function() {
-        if (this.state.data) {
-            console.log('DATA!', this.state)
-            var bookNodes = this.state.data.map(function(book, index){
+        if (this.state.data && this.state.data.results) {
+            var results = this.state.data.results
+            console.log('DATA!', results)
+            var bookNodes = results.map(function(book, index){
                 return <li key={index}> .{book.title} </li>
             })
         }
@@ -45,6 +84,9 @@ var BooksList = React.createClass({
     }
 })
 
+
+
+
 class App extends Component {
   render() {
     return (
@@ -54,9 +96,11 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+            BookList
         </p>
-        <BooksList url='/api/' pollInterval={100000} />
+        <BooksList url='http://sadhana-beckys57.c9users.io/api/' pollInterval={100000} />
+            <p>VisitFormset</p>
+        <VisitForm pollInterval={100000} />
       </div>
     );
   }

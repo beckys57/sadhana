@@ -1,19 +1,36 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
 
 from .models import *
 from .forms import MonitoringFormset, PlantingFormset
 
-def enter_data(request, purpose):
-    if purpose in [1,'1']:
-        visits = Visit.objects.prefetch_related('tree').filter(purpose=1)
-        formset = PlantingFormset(queryset=visits)
-    else:
-        formset = MonitoringFormset()
+class Planting():
+    def get_visits(self, purpose):
+        return Visit.objects.prefetch_related('tree').filter(purpose=1)
         
-    context = {
-        'visits': visits,
-        'formset': formset
-    }
+    def get_context(self, purpose):
+        if purpose in [1,'1']:
+            visits = self.get_visits(purpose=purpose)
+            formset = PlantingFormset(queryset=visits)
+        else:
+            formset = MonitoringFormset()
+            
+        context = {
+            'visits': visits,
+            'formset': formset
+        }
+        return context
+        
+    def get_form_html(self, purpose):
+        html = render_to_string('trees/planting_data.html', self.get_context(purpose))
+        return html
+
+planting = Planting()
+
+def enter_data(request, purpose):
+    # If the user enters the loads the page on the website use this view #
+
+    context = planting.get_context(purpose)
     return render(request, 'trees/planting_data.html', context)
     
 

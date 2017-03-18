@@ -4,6 +4,7 @@ from . import views
 
 namespace = 'api'
 urlpatterns = [
-    url(r'^2/$', views.book_list, name='master_list'),
-	url(r'^$', views.BookList.as_view(), name='book-list'),
+    url(r'^$', views.planting_data, name='planting_data'),
+    url(r'^working$', views.book_list, name='book_list'),
+	url(r'^2/$', views.BookList.as_view(), name='book-list'),
 ]
