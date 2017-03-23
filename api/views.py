@@ -24,9 +24,15 @@ class BookList(generics.ListCreateAPIView):
 def planting_data(request):
 	planting = Planting()
 	visits = planting.get_visits(purpose=1)
-	formset_html = planting.get_form_html(purpose=1)
-	return JsonResponse({'formset_html': formset_html})
-	
+	# formset_html = planting.get_form_html(purpose=1)
+	return JsonResponse({'visits': visits})
+
+@csrf_exempt
+def planting_data_save(request, purpose):
+	print 'Request', request.body
+	print 'POST:', request.POST
+	print 'GET:', request.GET
+	return JsonResponse({'success':'Saved'})
 		  
 def book_list(request):
 	print 'Meth', request.method

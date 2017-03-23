@@ -5,6 +5,6 @@ import Formy from './Form';
 import './index.css';
 
 ReactDOM.render(
-  <Formy />,
+  <Formy id='1' />,
   document.getElementById('root')
 );
