@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery'; 
@@ -8,7 +9,7 @@ var BooksList = React.createClass({
     loadBooksFromServer: function(){
         console.log(' In ', this.props.url)
         $.ajax({
-            url: 'http://sadhana-forest-beckys57.c9users.io/api/',// this.props.url,
+            url: this.props.url,
             datatype: 'json',
             cache: false,
             success: function(data) {
@@ -28,15 +29,15 @@ var BooksList = React.createClass({
                     this.props.pollInterval)
     }, 
     render: function() {
-        if (this.state.data) {
-            console.log('DATA!', this.state)
-            var bookNodes = this.state.data.map(function(book, index){
+        if (this.state.data && this.state.data.results) {
+            var results = this.state.data.results
+            console.log('DATA!', results)
+            var bookNodes = results.map(function(book, index){
                 return <li key={index}> .{book.title} </li>
             })
         }
         return (
             <div>
-                <h1>Hello React!</h1>
                 <ul>
                     {bookNodes}
                 </ul>
@@ -44,6 +45,9 @@ var BooksList = React.createClass({
         )
     }
 })
+
+
+
 
 class App extends Component {
   render() {
@@ -54,9 +58,9 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+            BookList
         </p>
-        <BooksList url='/api/' pollInterval={100000} />
+        <BooksList url='http://sadhana-beckys57.c9users.io/api/' pollInterval={100000} />
       </div>
     );
   }

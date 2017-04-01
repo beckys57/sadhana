@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "react-bootstrap": "^0.30.7"
+    "react-bootstrap": "^0.30.7",
+    "react-native-form-generator": "^0.9.9"
   }
 }

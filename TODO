@@ -12,7 +12,6 @@ Some projects on Github for React progressive apps
 
 
 TODO
-Make templatetag to get latest bundle from assets/build/static/js it has dynamic filename. Use this in index.html
 Setup react router urls for react app
 
 When developing react app, run npm start on one terminal to run the dev version of react app, and run django runserver from a different terminal to make the api available
